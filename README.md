@@ -1,6 +1,6 @@
 # paz-sellry
 
-*Author: Paul Zwicker, [PAZ Analytics](https://pazanalytics.com).*
+*Author: Paul Zwicker, [PAZ Analytics](https://pazanalytics.com?utm_source=github&utm_medium=referral&utm_campaign=paz-sellry).*
 
 # Overview
 
