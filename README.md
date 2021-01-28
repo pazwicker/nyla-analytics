@@ -4,4 +4,4 @@
 
 # Overview
 
-This repository houses scripts shared between PAZ Analtyics and Sellry. Scope can be Google Tag Manager code and beyond.
+This repo is shared between PAZ Analytics & NYLA. It houses scripts created for NYLA clients.
