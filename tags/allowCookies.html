@@ -1,0 +1,23 @@
+<!-- tag 1 fires on All Pages pageview -->
+
+<script>
+  dataLayer.push({
+    event: 'gtmEvent',
+    eventCategory: 'privacy',
+    eventAction: 'cookies',
+    eventLabel: 'default disallow',
+    allowCookies: false
+  })
+</script>
+
+<!-- tag 2 fires on allow.cookies event -->
+
+<script>
+  dataLayer.push({
+    event: 'gtmEvent',
+    eventCategory: 'privacy',
+    eventAction: 'cookies',
+    eventLabel: 'allow',
+    allowCookies: true
+  })
+</script>

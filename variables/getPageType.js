@@ -1,6 +1,6 @@
 // save this variable as `JS - pageType` in order to maintain compatibility with other custom tags.
 
-function() {
+function () {
     dl = location.pathname
     pageTypes = [
         'home',
