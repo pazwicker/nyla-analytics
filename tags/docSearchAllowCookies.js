@@ -13,7 +13,7 @@ function docSearchAllowCookies() {
     } catch (err) {
         dataLayer.push({
             event: 'allow.cookies',
-            allowCookies: gdpr
+            allowCookies: 'allow'
         })
     }
 }
