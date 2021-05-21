@@ -4,17 +4,16 @@ function docSearchAllowCookies() {
         console.log('delegating to cookiebot')
         return;
     }
-	try {
-		gdpr = document.location.search.split('gdpr=')[1]
+    try {
+        gdpr = document.location.search.split('gdpr=')[1]
         dataLayer.push({
             event: 'allow.cookies',
             allowCookies: gdpr
         })
-	}
-	catch(err) {
-		dataLayer.push({
+    } catch (err) {
+        dataLayer.push({
             event: 'allow.cookies',
             allowCookies: gdpr
         })
-	}
+    }
 }
