@@ -1,0 +1,85 @@
+{% if first_time_accessed %} 
+<script>
+        window.dataLayer = window.dataLayer || [];
+    </script>
+    <!-- Anti-flicker snippet (recommended)  -->
+    <style>.async-hide { opacity: 0 !important} </style>
+    <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
+    h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
+    (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+    })(window,document.documentElement,'async-hide','dataLayer',4000,
+    {'GTM-KK6F49F':true});</script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KK6F49F');</script>
+    <!-- End Google Tag Manager -->
+
+<script> 
+window.addEventListener('load', function(){ 
+    window.dataLayer = window.dataLayer || []; 
+    {% if customer %} 
+        window.dataLayer.push({
+            "event": "page_view",
+            "visitorType": "Logged In", 
+            "visitorId": "{{ customer.id | remove: "'" }}", 
+            "customerId": "{{ customer.id | remove: "'" }}", 
+            "customerEmail": "{{ customer.email }}", 
+            "customerFirstName": "{{ customer.first_name }}", 
+            "customerPhone": "{{ customer.default_address.phone }}", 
+            "customerLastName": "{{ customer.last_name }}", 
+            "customerCity": "{{ customer.default_address.city }}", 
+            "customerZip": "{{ customer.default_address.zip }}", 
+            "customerAddress1": "{{ customer.default_address.address1 }}", 
+            "customerAddress2": "{{ customer.default_address.address2 }}", 
+            "customerCountryCode": "{{ customer.default_address.country_code }}", 
+            "customerProvince": "{{ customer.default_address.province }}", 
+            "customerOrdersCount": "{{ customer.orders_count }}", 
+            "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+        }); 
+    {% else %} 
+        window.dataLayer.push({ "event": "page_view", "visitorType": "Guest" }); 
+    {% endif %} 
+    var lineItems = {{ order.line_items | json }}; 
+    window.dataLayer.push({ 
+        "pageType": "purchase", 
+        "event": "gtmEvent",
+        "eventCategory": 'enhanced ecommerce',
+	    "eventAction": 'transaction',
+        "eventLabel": '',
+        "customerEmail": '{{customer.email}}',
+        "ecommerce": { 
+            "currencyCode": "{{ order.currency }}", 
+            "purchase": { 
+                "actionField": { 
+                    "id": "{{order.order_number}}", 
+                    "revenue": "{{checkout.subtotal_price | plus: tax_price | plus: shipping_price | times: 0.01}}", 
+                    "tax": "{{tax_price | times: 0.01}}", 
+                    "shipping": "{{shipping_price | times: 0.01}}", 
+                    "affiliation": "{{ shop.name }}", 
+                    "discountAmount": "{{ checkout.discounts_amount | money_without_currency | remove: ',' }}" 
+                    {% if order.discounts %} ,"coupon": "{{ order.discounts[0].code }}" {% endif %} 
+                }, 
+                "products": lineItems.map(function(item, idx) { 
+                    return { 
+                        "name": item.title, 
+                        "id": item.sku, 
+                        "productId": item.product.id.toString(), 
+                        "variantId": item.variant_id.toString(), 
+                        "shopifyId": item.product.id + "_" + item.variant_id, 
+                        "price": parseFloat(item.price), 
+                        "brand": item.vendor, 
+                        "category": item.product.product_type, 
+                        "variant": item.variant.title, 
+                        "quantity": item.quantity 
+                    } 
+                })
+            } 
+        } 
+    }); 
+}, false); 
+</script> 
+{% endif %}
