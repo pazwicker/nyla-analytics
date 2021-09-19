@@ -25,3 +25,4 @@ switch (Shopify.Checkout.step) {
         ga('send', 'event', 'enhanced ecommerce', 'checkout steps', 'review | step 4')
         break;
 };
+
