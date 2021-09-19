@@ -1,6 +1,6 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2021-08-20 05:09:25",
+    "exportTime": "2021-08-27 01:31:15",
     "containerVersion": {
         "path": "accounts/6004240610/containers/47472764/versions/0",
         "accountId": "6004240610",
@@ -793,6 +793,31 @@
                     "96"
                 ],
                 "parentFolderId": "12",
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            },
+            {
+                "accountId": "6004240610",
+                "containerId": "47472764",
+                "tagId": "100",
+                "name": "Never2 - Crazy Egg Heatmap",
+                "type": "cegg",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "usersNumericId",
+                        "value": "01080416"
+                    }
+                ],
+                "fingerprint": "1629999904277",
+                "firingTriggerId": [
+                    "2147479553"
+                ],
                 "tagFiringOption": "ONCE_PER_EVENT",
                 "monitoringMetadata": {
                     "type": "MAP"
@@ -2098,10 +2123,10 @@
                     {
                         "type": "TEMPLATE",
                         "key": "javascript",
-                        "value": "function getPage() {\n    var hs = document.location.hostname\n    var dlPage = google_tag_manager[{{Container ID}}].dataLayer.get('page')\n    var path = document.location.pathname\n    var checkoutPath = {{JS - Checkout Page}}\n    if (hs.includes('checkout')) {\n        var page = checkoutPath\n    } else if (isNaN(dlPage)) {\n        var page = path\n    } else {\n        var page = dlPage\n    }\n    return page\n}"
+                        "value": "function getPage() {\n    var dlPage = google_tag_manager[{{Container ID}}].dataLayer.get('page')\n    var path = document.location.pathname\n    var checkoutPath = {{JS - Checkout Page}}\n    switch(checkoutPath) {\n      case \"thank_you\":\n      checkoutPath = \"/checkout/thank_you\";\n      break;\n    case \"processing\":\n      checkoutPath = \"/checkout/processing\";\n      break;\n    case \"shipping_method\":\n      checkoutPath = \"/checkout/shipping\";\n      break;\n    case \"contact_information\":\n      checkoutPath = \"/checkout/contact_information\";\n      break;\n    case \"payment_method\":\n      checkoutPath = \"/checkout/payment\";\n    }\n    if (path.includes('checkouts')) {\n        var page = checkoutPath\n    } else if (isNaN(dlPage)) {\n        var page = path\n    } else {\n        var page = dlPage\n    }\n    return page\n}"
                     }
                 ],
-                "fingerprint": "1629309576108",
+                "fingerprint": "1629754903638",
                 "parentFolderId": "12",
                 "formatValue": {}
             },
@@ -3226,10 +3251,10 @@
                     {
                         "type": "TEMPLATE",
                         "key": "name",
-                        "value": "meta.page.path"
+                        "value": "Shopify.Checkout.step"
                     }
                 ],
-                "fingerprint": "1629431944934",
+                "fingerprint": "1629557334884",
                 "parentFolderId": "12",
                 "formatValue": {
                     "convertUndefinedToValue": {
@@ -3377,7 +3402,7 @@
                 "name": "On-Screen Duration"
             }
         ],
-        "fingerprint": "1629436165496",
+        "fingerprint": "1630027875092",
         "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6004240610/containers/47472764/versions/0?apiLink=version",
         "customTemplate": [
             {
