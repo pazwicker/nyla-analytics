@@ -1112,7 +1112,7 @@
                             {
                                 "type": "TEMPLATE",
                                 "key": "arg1",
-                                "value": "product click|add to cart|product impressions|product detail view|cookiebot|purchase|checkout"
+                                "value": "product click|add to cart|product impressions|product detail view|cookiebot|transaction|checkout"
                             },
                             {
                                 "type": "BOOLEAN",
@@ -1233,7 +1233,7 @@
                             {
                                 "type": "TEMPLATE",
                                 "key": "arg1",
-                                "value": "add to cart|product detail view|purchase"
+                                "value": "add to cart|product detail view|transaction"
                             },
                             {
                                 "type": "BOOLEAN",
@@ -1633,7 +1633,7 @@
                             {
                                 "type": "TEMPLATE",
                                 "key": "arg1",
-                                "value": "product impressions|product detail view|purchase|checkout"
+                                "value": "product impressions|product detail view|transaction|checkout"
                             },
                             {
                                 "type": "BOOLEAN",
