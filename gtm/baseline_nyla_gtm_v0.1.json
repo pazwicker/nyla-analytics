@@ -3734,11 +3734,15 @@
                     {
                         "type": "TEMPLATE",
                         "key": "javascript",
-                        "value": "function () {\n    var DLH = localStorage.getItem('gdpr');\n      if (DLH == 'allow') {\n        var DLH = true\n     } else if (DLH == 'null') {\n        var DLH = true\n     } else {\n        var DLH = false\n    }\n    var DL = google_tag_manager[{{Container ID}}].dataLayer.get('allowCookies');\n    return DLH;\n}"
+                        "value": "function () {\n    var DLH = localStorage.getItem('gdpr');\n      if (DLH == 'allow') {\n        var DLH = true\n     } else if (DLH == 'null') {\n        var DLH = true\n     } else if (DLH == 'deny') {\n        var DLH = false\n    }\n    var DL = google_tag_manager[{{Container ID}}].dataLayer.get('allowCookies');\n    return DLH;\n}"
                     }
                 ],
                 "fingerprint": "1646413726565",
                 "formatValue": {
+                    "convertNullToValue": {
+                        "type": "TEMPLATE",
+                        "value": "true"
+                    },
                     "convertUndefinedToValue": {
                         "type": "TEMPLATE",
                         "value": "true"
