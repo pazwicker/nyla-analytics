@@ -1,0 +1,282 @@
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-KWN5HPC');</script>
+    <!-- End Google Tag Manager -->
+    
+<script>
+window.addEventListener('load', function(){ 
+    window.dataLayer = window.dataLayer || []; 
+    {% if customer.id == null %} 
+        window.dataLayer.push({
+            "event": "page_view",
+            "visitorType": "Guest", 
+            "visitorId": "{{ customer.id | remove: "'" }}", 
+            "customerId": "{{ customer.id | remove: "'" }}", 
+            "customerEmail": "{{ customer.email }}", 
+            "customerFirstName": "{{ customer.first_name }}", 
+            "customerPhone": "{{ customer.default_address.phone }}", 
+            "customerLastName": "{{ customer.last_name }}", 
+            "customerCity": "{{ checkout.shipping_address.city }}", 
+            "customerZip": "{{ checkout.shipping_address.zip }}", 
+            "customerAddress1": "{{ checkout.shipping_address.address1 }}", 
+            "customerAddress2": "{{ checkout.shipping_address.address2 }}", 
+            "customerCountryCode": "{{ checkout.shipping_address.country_code }}", 
+            "customerProvince": "{{ checkout.shipping_address.province }}", 
+            "customerOrdersCount": "{{ customer.orders_count }}", 
+            "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+        });
+    {% else %}  
+        window.dataLayer.push({
+            "event": "page_view",
+            "visitorType": "Logged In", 
+            "visitorId": "{{ customer.id | remove: "'" }}", 
+            "customerId": "{{ customer.id | remove: "'" }}", 
+            "customerEmail": "{{ customer.email }}", 
+            "customerFirstName": "{{ customer.first_name }}", 
+            "customerPhone": "{{ customer.default_address.phone }}", 
+            "customerLastName": "{{ customer.last_name }}", 
+            "customerCity": "{{ customer.default_address.city }}", 
+            "customerZip": "{{ customer.default_address.zip }}", 
+            "customerAddress1": "{{ customer.default_address.address1 }}", 
+            "customerAddress2": "{{ customer.default_address.address2 }}", 
+            "customerCountryCode": "{{ customer.default_address.country_code }}", 
+            "customerProvince": "{{ customer.default_address.province }}", 
+            "customerOrdersCount": "{{ customer.orders_count }}", 
+            "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+        }); 
+    {% endif %} 
+}, false);
+</script>
+
+<script>
+    try {
+    window.addEventListener('load', function(){ 
+    window.dataLayer = window.dataLayer || []; 
+
+    // prepare order or checkout data, depending on object availability
+    try {
+        var order_id = "{{ order.order_number }}";
+        var currency = "{{ order.currency }}";
+        var checkout_order_id = "{{ checkout.order_id }}";
+        var checkout_currency = "{{ checkout.currency }}";
+    }
+    catch(err) {
+        console.log("[error] - order and checkout objects unavailable", err)
+    }
+
+    // prepare discount data
+    try {
+        var is_discounted = true;
+        var coupon_code = "{{ checkout.discounts[0].code }}";
+        var discount_amount = {{ checkout.discounts_amount | money_without_currency | remove: ',' }}
+    }
+    catch (err) {
+        var coupon_code = null;
+        var discount_amount = 0;
+        console.log("[warn] - no discounts in use.", err)
+    }
+
+    // prepare item data
+    if (order_id == "") {
+        try {
+            {% for item in checkout.line_items %}
+            var line_items =
+            {
+                "name": "{{ item.title }}", 
+                "id": "{{ item.sku }}", 
+                "productId": "{{ item.product.id }}", 
+                "variantId": "{{ item.variant_id }}", 
+                "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}", 
+                "price": parseFloat({{ item.price | times: 0.01}}), 
+                "brand": "{{ item.vendor }}", 
+                "category": "{{ item.product.product_type }}", 
+                "variant": "{{ item.variant.title }}", 
+                "quantity": {{ item.quantity }}
+            }{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+        } catch (err) {
+        console.log("[error] - couldn't prepare checkout item data for dataLayer", err)
+        }
+    } else {
+        try {
+            {% for item in order.line_items %}
+            var line_items =
+            {
+                "name": "{{ item.title }}", 
+                "id": "{{ item.sku }}", 
+                "productId": "{{ item.product.id }}", 
+                "variantId": "{{ item.variant_id }}", 
+                "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}", 
+                "price": parseFloat({{ item.price | times: 0.01 }}), 
+                "brand": "{{ item.vendor }}", 
+                "category": "{{ item.product.product_type }}", 
+                "variant": "{{ item.variant.title }}", 
+                "quantity": {{ item.quantity }}
+            }{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+        } catch (err) {
+        console.log("[error] - couldn't prepare order item data for dataLayer", err)
+        }
+    }
+
+    // prepare variables based on order object availability
+    if (order_id == "") {
+        var order_id_final = checkout_order_id
+        var currency_final = checkout_currency
+    } else {
+        var order_id_final = order_id
+        var currency_final = currency
+    }
+
+    console.log("successfully processed order data", order_id_final, currency_final, line_items);
+    
+    {%if first_time_accessed %}
+    window.dataLayer.push({ 
+        "pageType": "purchase", 
+        "event": "gtmEvent",
+        "eventCategory": 'enhanced ecommerce',
+        "eventAction": 'transaction',
+        "eventLabel": order_id_final,
+        "ecommerce": { 
+            "currencyCode": currency_final, 
+            "purchase": { 
+                "actionField": { 
+                    "id": order_id_final, 
+                    "revenue": {{checkout.subtotal_price | plus: tax_price | plus: shipping_price | times: 0.01}}, 
+                    "tax": {{tax_price | times: 0.01}}, 
+                    "shipping": {{shipping_price | times: 0.01}}, 
+                    "affiliation": "{{ shop.name }}", 
+                    "discountAmount": discount_amount,
+                    "coupon": coupon_code
+                }, 
+                "products": [
+                    line_items
+                ]
+            } 
+        } 
+    });
+    {% endif %} 
+}, false);
+    }
+    catch(err) {
+    console.log("[error] - couldn't prepare data for dataLayer", err)
+    }
+</script> 
+
+<!-- Offer Conversion: Collectif -->
+<img src="https://aspireiq.go2cloud.org/aff_l?offer_id=10319&amount={{total_price | money_without_currency}}" width="1" height="1" />
+<!-- // End Offer Conversion -->
+
+<!-- Offer Conversion: Meg Strachan  -->
+<img src="https://aspireiq.go2cloud.org/aff_l?offer_id=10466&amount={{total_price | money_without_currency}}" width="1" height="1" />
+<!-- // End Offer Conversion -->
+
+<!-- Offer Conversion: Jacey Dupree  -->
+<img src="https://aspireiq.go2cloud.org/aff_l?offer_id=10467&amount={{total_price | money_without_currency}}" width="1" height="1" />
+<!-- // End Offer Conversion -->
+
+<!-- Begin ShareASale Tracking -->
+{%if first_time_accessed %}
+<script>
+const sasMid = '53392', sasStoreId = '', sasXtype = '', sasSkulist = [], sasPricelist = [], sasQuantitylist = [],
+    sasOrderName = '{{ order.name | handleize }}' || sasGetOrderRef(),
+    sasDiscounts = Shopify.checkout.discount ? parseFloat(Shopify.checkout.discount.amount) : 0,
+    sasCurrency = Shopify.checkout.presentment_currency || '{{ order.currency }}',
+    sasAmount = parseFloat(Shopify.checkout.subtotal_price),
+    sasDiscountPercent = 1 - (sasDiscounts / (sasAmount + sasDiscounts)),
+    sasNewCustomer = {% if customer.orders_count > 1 %}'0'{% elsif customer.orders_count <= 1 %} '1'{% else %} ''{% endif %},
+    sasCouponcode = Shopify.checkout.discount ? Shopify.checkout.discount.code : '',
+    sasVersion = 'shopify_4.0',
+    sasImg = new Image(),
+    sasMetaTagOpen = document.createElement('meta'),
+    sasMetaTagClose = document.createElement('meta');
+sasMetaTagOpen.setAttribute('name', 'referrer'); sasMetaTagOpen.setAttribute('content', 'unsafe-url');
+sasMetaTagClose.setAttribute('name', 'referrer'); sasMetaTagClose.setAttribute('content', 'origin');
+Shopify.checkout.line_items.map((x) => {
+    sasSkulist.push(x.sku);
+    sasPricelist.push((x.price * sasDiscountPercent).toFixed(2));
+    sasQuantitylist.push(x.quantity)
+});
+sasImg.src = `https://shareasale.com/sale.cfm?v=${sasVersion}&merchantID=${sasMid}&transtype=sale&amount=${sasAmount}&tracking=${sasOrderName}&skulist=${sasSkulist}&pricelist=${sasPricelist}&quantitylist=${sasQuantitylist}&currency=${sasCurrency}&couponcode=${sasCouponcode}&newcustomer=${sasNewCustomer}`;
+if (sasStoreId) { sasImg.src += `&storeid=${sasStoreId}` }
+if (sasXtype) { sasImg.src += `&xtype=${sasXtype}` }
+document.body.appendChild(sasMetaTagOpen);
+document.body.appendChild(sasImg);
+document.body.appendChild(sasMetaTagClose);
+function sasGetOrderRef() {
+    var orderRef;
+    try {
+        var orderLabel = document.querySelector('.os-order-number');
+        if (orderLabel !== null) {
+            orderRef = orderLabel.innerText.split('#')[1];
+            if (!orderRef) {
+                orderRef = orderLabel.innerText.split(' ')[1];
+            }
+        }
+        if (!orderRef) {
+            orderRef = window.Shopify.checkout.order_id;
+        }
+        if (!orderRef) {
+            throw Error('order_ref_error');
+        }
+    } catch (err) {
+        console.log('ShareASale: error getting orderRef from page. Using timestamp.');
+        orderRef = Date.now();
+    }
+    return orderRef;
+}
+</script>
+{% endif %}
+<script src="https://www.dwin1.com/19038.js"></script>
+
+<!-- Hotjar Tracking Code for https://janessaleone.com/ -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1014167,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<!-- Global site tag (gtag.js) - Google Ads: 833212653 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-833212653"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-833212653');
+</script>
+{% if first_time_accessed %}
+<!-- Event snippet for Store Purchase conversion page -->
+<script>
+  gtag('event', 'conversion', {
+      'send_to': 'AW-833212653/1icYCIi243UQ7aGnjQM',
+      'value': {{ total_price | money_without_currency | remove:',' }},
+      'currency': '{{ order.currency }}',
+      'transaction_id': '{{ order.order_number }}'
+  });
+</script>
+{% endif %}
+
+<!-- Google Ads Dynamic Remarketing -->
+<script>
+  gtag('event', 'page_view', {
+  'send_to': 'AW-833212653',
+  'ecomm_pagetype': 'purchase',
+  'ecomm_prodid': [{% for item in checkout.line_items %}'shopify_US_{{ item.product_id }}_{{ item.variant_id }}',{% endfor %}],
+  'ecomm_totalvalue': {{ checkout.total_price | money_without_currency | remove:',' }},
+  'ecomm_lifetimevalue': {{ customer.total_spent }},
+  'ecomm_ordercount': {{customer.orders_count }},
+  'ecomm_category': [{% for item in checkout.line_items %}"{{ item.product.type }}" ,{% endfor %}],
+  });
+</script>
+{% if first_time_accessed %}<img src="https://foursixty.com/conversion-pixel.gif?extension=janessa-leone_1&value={{ total_price | money_without_currency | strip_html }}">{% endif %}
+
+<script src="https://cdn.attn.tv/jl/dtag.js"></script>
