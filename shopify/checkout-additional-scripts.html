@@ -1,125 +1,167 @@
 <!-- Google Tag Manager -->
-<script>
-  (function(w, d, s, l, i) {
-    w[l] = w[l] || [];
-    w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
-    var f = d.getElementsByTagName(s)[0],
-      j = d.createElement(s),
-      dl = l != 'dataLayer'
-        ? '&l=' + l
-        : '';
-    j.async = true;
-    j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-    f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', 'GTM-NQP67TR');
-</script>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NQP67TR');</script>
 <!-- End Google Tag Manager -->
 
 <script>
-  console.log('Customer script loading');
-  window.addEventListener('load', function() {
-    window.dataLayer = window.dataLayer || [];{% if customer.id == null %}
-      window.dataLayer.push({
-        "event": "page_view",
-        "visitorType": "Guest",
-        "visitorId": "{{ customer.id | remove: "'" }}",
-        "customerId": "{{ customer.id | remove: "'" }}",
-        "customerEmail": "{{ customer.email }}",
-        "customerFirstName": "{{ customer.first_name }}",
-        "customerPhone": "{{ customer.default_address.phone }}",
-        "customerLastName": "{{ customer.last_name }}",
-        "customerCity": "{{ checkout.shipping_address.city }}",
-        "customerZip": "{{ checkout.shipping_address.zip }}",
-        "customerAddress1": "{{ checkout.shipping_address.address1 }}",
-        "customerAddress2": "{{ checkout.shipping_address.address2 }}",
-        "customerCountryCode": "{{ checkout.shipping_address.country_code }}",
-        "customerProvince": "{{ checkout.shipping_address.province }}",
-        "customerOrdersCount": "{{ customer.orders_count }}",
-        "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}"
-      });
-    {% else %}
-      window.dataLayer.push({
-        "event": "page_view",
-        "visitorType": "Logged In",
-        "visitorId": "{{ customer.id | remove: "'" }}",
-        "customerId": "{{ customer.id | remove: "'" }}",
-        "customerEmail": "{{ customer.email }}",
-        "customerFirstName": "{{ customer.first_name }}",
-        "customerPhone": "{{ customer.default_address.phone }}",
-        "customerLastName": "{{ customer.last_name }}",
-        "customerCity": "{{ customer.default_address.city }}",
-        "customerZip": "{{ customer.default_address.zip }}",
-        "customerAddress1": "{{ customer.default_address.address1 }}",
-        "customerAddress2": "{{ customer.default_address.address2 }}",
-        "customerCountryCode": "{{ customer.default_address.country_code }}",
-        "customerProvince": "{{ customer.default_address.province }}",
-        "customerOrdersCount": "{{ customer.orders_count }}",
-        "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}"
-      });{% endif %}
+window.addEventListener('load', function(){ 
+    window.dataLayer = window.dataLayer || []; 
+    {% if customer.id == null %} 
+        window.dataLayer.push({
+            "event": "page_view",
+            "visitorType": "Guest", 
+            "visitorId": "{{ customer.id | remove: "'" }}", 
+            "customerId": "{{ customer.id | remove: "'" }}", 
+            "customerEmail": "{{ customer.email }}", 
+            "customerFirstName": "{{ customer.first_name }}", 
+            "customerPhone": "{{ customer.default_address.phone }}", 
+            "customerLastName": "{{ customer.last_name }}", 
+            "customerCity": "{{ checkout.shipping_address.city }}", 
+            "customerZip": "{{ checkout.shipping_address.zip }}", 
+            "customerAddress1": "{{ checkout.shipping_address.address1 }}", 
+            "customerAddress2": "{{ checkout.shipping_address.address2 }}", 
+            "customerCountryCode": "{{ checkout.shipping_address.country_code }}", 
+            "customerProvince": "{{ checkout.shipping_address.province }}", 
+            "customerOrdersCount": "{{ customer.orders_count }}", 
+            "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+        });
+    {% else %}  
+        window.dataLayer.push({
+            "event": "page_view",
+            "visitorType": "Logged In", 
+            "visitorId": "{{ customer.id | remove: "'" }}", 
+            "customerId": "{{ customer.id | remove: "'" }}", 
+            "customerEmail": "{{ customer.email }}", 
+            "customerFirstName": "{{ customer.first_name }}", 
+            "customerPhone": "{{ customer.default_address.phone }}", 
+            "customerLastName": "{{ customer.last_name }}", 
+            "customerCity": "{{ customer.default_address.city }}", 
+            "customerZip": "{{ customer.default_address.zip }}", 
+            "customerAddress1": "{{ customer.default_address.address1 }}", 
+            "customerAddress2": "{{ customer.default_address.address2 }}", 
+            "customerCountryCode": "{{ customer.default_address.country_code }}", 
+            "customerProvince": "{{ customer.default_address.province }}", 
+            "customerOrdersCount": "{{ customer.orders_count }}", 
+            "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+        }); 
+    {% endif %} 
 }, false);
 </script>
 
-{% if first_time_accessed %}
-  <script>
-    console.log('order processing script loading');
-    window.addEventListener('load', function() {
-      window.dataLayer = window.dataLayer || [];{% if order.order_number == null %}
-        var lineItems = {{ checkout.line_items | json }};
-        var order_id = {{ checkout.order_id }};
-        var currency = "{{ checkout.currency }}";{% if checkout.discounts != null %}
-          var is_discounted = true;
-          var coupon_code = {{ checkout.discounts[0].code }};
-        {% else %}
-          var is_discounted = false;
-          var coupon_code = null;{% endif %}
-        console.log('processing order as checkout');
-      {% else %}
-        var is_order = true;
-        var lineItems = {{ order.line_items | json }};
-        var order_id = {{order.order_number}};
-        var currency = "{{ order.currency }}";{% if order.discounts != null %}
-          var is_discounted = true;
-          var coupon_code = {{ order.discounts[0].code }};
-        {% else %}
-          var is_discounted = false;
-          var coupon_code = null;{% endif %}
-      {% endif %}
-      console.log('processing order as order');
-      window.dataLayer.push({
-        "pageType": "purchase",
+<script>
+  try {
+    window.addEventListener('load', function(){ 
+    window.dataLayer = window.dataLayer || []; 
+
+    // prepare order or checkout data, depending on object availability
+    try {
+      var order_id = "{{ order.order_number }}";
+      var currency = "{{ order.currency }}";
+      var checkout_order_id = "{{ checkout.order_id }}";
+      var checkout_currency = "{{ checkout.currency }}";
+    }
+    catch(err) {
+      console.log("[error] - order and checkout objects unavailable", err)
+    }
+
+    // prepare discount data
+    try {
+      var is_discounted = true;
+      var coupon_code = "{{ checkout.discounts[0].code }}";
+      var discount_amount = {{ checkout.discounts_amount | money_without_currency | remove: ',' }}
+    }
+    catch (err) {
+      var coupon_code = null;
+      var discount_amount = 0;
+      console.log("[warn] - no discounts in use.", err)
+    }
+
+    // prepare item data
+    if (order_id == "") {
+      try {
+          {% for item in checkout.line_items %}
+            var line_items =
+            {
+              "name": "{{ item.title }}", 
+              "id": "{{ item.sku }}", 
+              "productId": "{{ item.product.id }}", 
+              "variantId": "{{ item.variant_id }}", 
+              "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}", 
+              "price": parseFloat({{ item.price | times: 0.01}}), 
+              "brand": "{{ item.vendor }}", 
+              "category": "{{ item.product.product_type }}", 
+              "variant": "{{ item.variant.title }}", 
+              "quantity": {{ item.quantity }}
+          }{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+      } catch (err) {
+        console.log("[error] - couldn't prepare checkout item data for dataLayer", err)
+      }
+    } else {
+      try {
+          {% for item in order.line_items %}
+            var line_items =
+            {
+              "name": "{{ item.title }}", 
+              "id": "{{ item.sku }}", 
+              "productId": "{{ item.product.id }}", 
+              "variantId": "{{ item.variant_id }}", 
+              "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}", 
+              "price": parseFloat({{ item.price | times: 0.01 }}), 
+              "brand": "{{ item.vendor }}", 
+              "category": "{{ item.product.product_type }}", 
+              "variant": "{{ item.variant.title }}", 
+              "quantity": {{ item.quantity }}
+          }{% unless forloop.last %}, {% endunless %}
+        {% endfor %}
+      } catch (err) {
+        console.log("[error] - couldn't prepare order item data for dataLayer", err)
+      }
+    }
+
+    // prepare variables based on order object availability
+    if (order_id == "") {
+      var order_id_final = checkout_order_id
+      var currency_final = checkout_currency
+    } else {
+      var order_id_final = order_id
+      var currency_final = currency
+    }
+
+    console.log("successfully processed order data", order_id_final, currency_final, line_items);
+    
+    {%if first_time_accessed %}
+    window.dataLayer.push({ 
+        "pageType": "purchase", 
         "event": "gtmEvent",
         "eventCategory": 'enhanced ecommerce',
         "eventAction": 'transaction',
-        "eventLabel": order_id,
-        "ecommerce": {
-          "currencyCode": currency,
-          "purchase": {
-            "actionField": {
-              "id": order_id,
-              "revenue": "{{checkout.subtotal_price | plus: tax_price | plus: shipping_price | times: 0.01}}",
-              "tax": "{{tax_price | times: 0.01}}",
-              "shipping": "{{shipping_price | times: 0.01}}",
-              "affiliation": "{{ shop.name }}",
-              "discountAmount": "{{ checkout.discounts_amount | money_without_currency | remove: ',' }}",
-              "coupon": coupon_code
-            },
-            "products": lineItems.map(function(item, idx) {
-              return {
-                "name": item.title,
-                "id": item.sku,
-                "productId": item.product.id.toString(),
-                "variantId": item.variant_id.toString(),
-                "shopifyId": item.product.id + "_" + item.variant_id,
-                "price": parseFloat(item.price),
-                "brand": item.vendor,
-                "category": item.product.product_type,
-                "variant": item.variant.title,
-                "quantity": item.quantity
-              }
-            })
-          }
-        }
-      });
-    }, false);
-  </script>
-{% endif %}
+        "eventLabel": order_id_final,
+        "ecommerce": { 
+            "currencyCode": currency_final, 
+            "purchase": { 
+                "actionField": { 
+                    "id": order_id_final, 
+                    "revenue": {{checkout.subtotal_price | plus: tax_price | plus: shipping_price | times: 0.01}}, 
+                    "tax": {{tax_price | times: 0.01}}, 
+                    "shipping": {{shipping_price | times: 0.01}}, 
+                    "affiliation": "{{ shop.name }}", 
+                    "discountAmount": discount_amount,
+                    "coupon": coupon_code
+                }, 
+                "products": [
+                  line_items
+                ]
+            } 
+        } 
+    });
+  {% endif %} 
+}, false);
+  }
+  catch(err) {
+    console.log("[error] - couldn't prepare data for dataLayer", err)
+  }
+</script> 
