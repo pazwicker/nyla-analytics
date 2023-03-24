@@ -93,46 +93,37 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         }
     
         // prepare item data
-        if (order_id == "") {
-          try {
-              {% for item in checkout.line_items %}
-                var line_items =
-                {
-                  "name": "{{ item.title }}", 
-                  "id": "{{ item.sku }}", 
-                  "productId": "{{ item.product.id }}", 
-                  "variantId": "{{ item.variant_id }}", 
-                  "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}", 
-                  "price": parseFloat({{ item.price | times: 0.01}}), 
-                  "brand": "{{ item.vendor }}", 
-                  "category": "{{ item.product.product_type }}", 
-                  "variant": "{{ item.variant.title }}", 
-                  "quantity": {{ item.quantity }}
-              }{% unless forloop.last %}, {% endunless %}
-            {% endfor %}
-          } catch (err) {
-            console.log("[error] - couldn't prepare checkout item data for dataLayer", err)
-          }
+        var line_items = [];
+        if (order_id === "") {
+          {% for item in checkout.line_items %}
+            line_items.push({
+              "name": "{{ item.title }}",
+              "id": "{{ item.sku }}",
+              "productId": "{{ item.product.id }}",
+              "variantId": "{{ item.variant_id }}",
+              "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}",
+              "price": parseFloat("{{ item.price | times: 0.01 }}"),
+              "brand": "{{ item.vendor }}",
+              "category": "{{ item.product.product_type }}",
+              "variant": "{{ item.variant.title }}",
+              "quantity": {{ item.quantity }}
+            });
+          {% endfor %}
         } else {
-          try {
-              {% for item in order.line_items %}
-                var line_items =
-                {
-                  "name": "{{ item.title }}", 
-                  "id": "{{ item.sku }}", 
-                  "productId": "{{ item.product.id }}", 
-                  "variantId": "{{ item.variant_id }}", 
-                  "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}", 
-                  "price": parseFloat({{ item.price | times: 0.01 }}), 
-                  "brand": "{{ item.vendor }}", 
-                  "category": "{{ item.product.product_type }}", 
-                  "variant": "{{ item.variant.title }}", 
-                  "quantity": {{ item.quantity }}
-              }{% unless forloop.last %}, {% endunless %}
-            {% endfor %}
-          } catch (err) {
-            console.log("[error] - couldn't prepare order item data for dataLayer", err)
-          }
+          {% for item in order.line_items %}
+            line_items.push({
+              "name": "{{ item.title }}",
+              "id": "{{ item.sku }}",
+              "productId": "{{ item.product.id }}",
+              "variantId": "{{ item.variant_id }}",
+              "shopifyId": "{{ item.product.id }}" + "_" + "{{ item.variant_id }}",
+              "price": parseFloat("{{ item.price | times: 0.01 }}"),
+              "brand": "{{ item.vendor }}",
+              "category": "{{ item.product.product_type }}",
+              "variant": "{{ item.variant.title }}",
+              "quantity": {{ item.quantity }}
+            });
+          {% endfor %}
         }
     
         // prepare variables based on order object availability
@@ -146,7 +137,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     
         console.log("successfully processed order data", order_id_final, currency_final, line_items);
         
-        {%if first_time_accessed %}
+        {% if first_time_accessed %}
         window.dataLayer.push({ 
             "pageType": "purchase", 
             "event": "gtmEvent",
@@ -165,13 +156,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                         "discountAmount": discount_amount,
                         "coupon": coupon_code
                     }, 
-                    "products": [
+                    "products": 
                       line_items
-                    ]
                 } 
             } 
         });
-      {% endif %} 
+        {% endif %}
     }, false);
       }
       catch(err) {
