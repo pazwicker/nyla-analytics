@@ -22,10 +22,11 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <script>
     window.addEventListener('load', function(){ 
         window.dataLayer = window.dataLayer || []; 
-        {% if customer.id == null %} 
+        {% if customer.orders_count == 0 %} 
             window.dataLayer.push({
                 "event": "page_view",
                 "visitorType": "Guest", 
+                "consumerType": "New",
                 "visitorId": "{{ customer.id | remove: "'" }}", 
                 "customerId": "{{ customer.id | remove: "'" }}", 
                 "customerEmail": "{{ customer.email }}", 
@@ -38,13 +39,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 "customerAddress2": "{{ checkout.shipping_address.address2 }}", 
                 "customerCountryCode": "{{ checkout.shipping_address.country_code }}", 
                 "customerProvince": "{{ checkout.shipping_address.province }}", 
-                "customerOrdersCount": "{{ customer.orders_count }}", 
-                "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+                "customerOrdersCount": 1, 
+                "customerTotalSpent": {{ checkout.subtotal_price | plus: tax_price | plus: shipping_price | times: 0.01 }}
             });
         {% else %}  
             window.dataLayer.push({
                 "event": "page_view",
                 "visitorType": "Logged In", 
+                "consumerType": "Returning",
                 "visitorId": "{{ customer.id | remove: "'" }}", 
                 "customerId": "{{ customer.id | remove: "'" }}", 
                 "customerEmail": "{{ customer.email }}", 
@@ -57,8 +59,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 "customerAddress2": "{{ customer.default_address.address2 }}", 
                 "customerCountryCode": "{{ customer.default_address.country_code }}", 
                 "customerProvince": "{{ customer.default_address.province }}", 
-                "customerOrdersCount": "{{ customer.orders_count }}", 
-                "customerTotalSpent": "{{ customer.total_spent | divided_by: 100 }}", 
+                "customerOrdersCount": {{ customer.orders_count }}, 
+                "customerTotalSpent": {{ customer.total_spent | divided_by: 100 | plus: checkout.subtotal_price | plus: tax_price | plus: shipping_price | times: 0.01 }}
             }); 
         {% endif %} 
     }, false);
