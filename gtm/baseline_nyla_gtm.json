@@ -10,7 +10,7 @@
             "path": "accounts/6073593102/containers/102923929",
             "accountId": "6073593102",
             "containerId": "102923929",
-            "name": "GluteBoost - Nyla",
+            "name": "Nyla Landing Page",
             "publicId": "GTM-TK5VQWV",
             "usageContext": [
                 "WEB"
@@ -4716,7 +4716,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "value",
-                        "value": "gluteboost.com,shopall.gluteboost.com"
+                        "value": "[UPDATE]"
                     }
                 ],
                 "fingerprint": "1677102455101",
