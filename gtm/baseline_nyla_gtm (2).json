@@ -7139,7 +7139,7 @@
                     {
                         "type": "TEMPLATE",
                         "key": "value",
-                        "value": "UPDATE"
+                        "value": "[UPDATE]"
                     }
                 ],
                 "fingerprint": "1676908621159",
