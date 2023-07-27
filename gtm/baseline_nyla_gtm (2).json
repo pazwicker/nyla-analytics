@@ -1,11 +1,12 @@
 {
     "exportFormatVersion": 2,
-    "exportTime": "2023-07-27 02:16:03",
+    "exportTime": "2023-07-27 02:19:42",
     "containerVersion": {
-        "path": "accounts/6139183063/containers/137025910/versions/0",
+        "path": "accounts/6139183063/containers/137025910/versions/4",
         "accountId": "6139183063",
         "containerId": "137025910",
-        "containerVersionId": "0",
+        "containerVersionId": "4",
+        "name": "resumed bing",
         "container": {
             "path": "accounts/6139183063/containers/137025910",
             "accountId": "6139183063",
@@ -789,14 +790,13 @@
                         "value": "PAGE_LOAD"
                     }
                 ],
-                "fingerprint": "1690423940258",
+                "fingerprint": "1690424362043",
                 "firingTriggerId": [
                     "24",
                     "25"
                 ],
                 "parentFolderId": "3",
                 "tagFiringOption": "ONCE_PER_EVENT",
-                "paused": true,
                 "monitoringMetadata": {
                     "type": "MAP"
                 },
@@ -847,13 +847,12 @@
                         "value": "add_to_cart"
                     }
                 ],
-                "fingerprint": "1690423940259",
+                "fingerprint": "1690424362041",
                 "firingTriggerId": [
                     "108"
                 ],
                 "parentFolderId": "3",
                 "tagFiringOption": "ONCE_PER_EVENT",
-                "paused": true,
                 "monitoringMetadata": {
                     "type": "MAP"
                 },
@@ -1283,13 +1282,12 @@
                         "value": "view_item_list"
                     }
                 ],
-                "fingerprint": "1690423940263",
+                "fingerprint": "1690424362043",
                 "firingTriggerId": [
                     "79"
                 ],
                 "parentFolderId": "3",
                 "tagFiringOption": "ONCE_PER_EVENT",
-                "paused": true,
                 "monitoringMetadata": {
                     "type": "MAP"
                 },
@@ -1588,13 +1586,12 @@
                         "value": "select_content"
                     }
                 ],
-                "fingerprint": "1690423940266",
+                "fingerprint": "1690424362042",
                 "firingTriggerId": [
                     "103"
                 ],
                 "parentFolderId": "3",
                 "tagFiringOption": "ONCE_PER_EVENT",
-                "paused": true,
                 "monitoringMetadata": {
                     "type": "MAP"
                 },
@@ -1779,7 +1776,7 @@
                         "value": "purchase"
                     }
                 ],
-                "fingerprint": "1690423940309",
+                "fingerprint": "1690424362044",
                 "firingTriggerId": [
                     "11"
                 ],
@@ -1790,7 +1787,6 @@
                 ],
                 "parentFolderId": "3",
                 "tagFiringOption": "ONCE_PER_EVENT",
-                "paused": true,
                 "monitoringMetadata": {
                     "type": "MAP"
                 },
@@ -2549,13 +2545,12 @@
                         "value": "view_item"
                     }
                 ],
-                "fingerprint": "1690423940314",
+                "fingerprint": "1690424362044",
                 "firingTriggerId": [
                     "17"
                 ],
                 "parentFolderId": "3",
                 "tagFiringOption": "ONCE_PER_EVENT",
-                "paused": true,
                 "monitoringMetadata": {
                     "type": "MAP"
                 },
@@ -8128,8 +8123,8 @@
                 "name": "On-Screen Duration"
             }
         ],
-        "fingerprint": "1690424163629",
-        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6139183063/containers/137025910/versions/0?apiLink=version",
+        "fingerprint": "1690424372221",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6139183063/containers/137025910/versions/4?apiLink=version",
         "customTemplate": [
             {
                 "accountId": "6139183063",
